@@ -14,6 +14,7 @@ namespace StringAndStringBuilder
         public void Program()
         {
 
+
             //PatientMenu.Add(new Button(1, 0, "Details", () =>
             //{
             //           ShowPatientDetails();
