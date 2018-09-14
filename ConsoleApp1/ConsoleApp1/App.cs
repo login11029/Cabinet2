@@ -15,30 +15,7 @@ namespace StringAndStringBuilder
         {
 
 
-            //PatientMenu.Add(new Button(1, 0, "Details", () =>
-            //{
-            //           ShowPatientDetails();
-            //}));
-
-            //PatientMenu.Add(new Button(1, 1, "Visit history", () =>
-            //{
-            //    ShowList(cabinet.CurrentPatient.GetPastVisits(), (Visit v) => { cabinet.CurrentVisit = v; VisitMenu(); });
-            //}));
-
-            //PatientMenu.Add(new Button(1, 2, "Future visits", () =>
-            //{
-            //    ShowList(cabinet.CurrentPatient.GetFutureVisits(), (Visit v) => { cabinet.CurrentVisit = v; VisitMenu(); });
-            //}));
-
-            //PatientMenu.Add(new Button(1, 3, "Add visit", () =>
-            //{
-            //    AddVisit();
-            //}));
-
-            //PatientMenu.Add(new Button(1, 4, "Back", () =>
-            //{
-            //    Menu.PrevMenu();
-            //}));
+            
 
 
 
@@ -65,10 +42,6 @@ namespace StringAndStringBuilder
             Menu.Add(new Button(1, 7, "Exit", () => { Exit(); }));
         }
 
-
-
-
-
         void AddPatient()
         {
             Menu.Clear();
@@ -88,245 +61,253 @@ namespace StringAndStringBuilder
         }
 
 
+        void PatientMenu()
+        {
+            Menu.Clear();
 
-        //    public List<T> FindItem<T>(List<T>list, T item)
+            Menu.Add(new Button(1, 0, "Details", () =>
+            {
+                ShowPatientDetails();
+            }));
+
+            Menu.Add(new Button(1, 1, "Visit history", () =>
+            {
+                ShowList(cabinet.CurrentPatient.GetPastVisits(), (Visit v) => { cabinet.CurrentVisit = v; VisitMenu(); });
+            }));
+
+            Menu.Add(new Button(1, 2, "Future visits", () =>
+            {
+                ShowList(cabinet.CurrentPatient.GetFutureVisits(), (Visit v) => { cabinet.CurrentVisit = v; VisitMenu(); });
+            }));
+
+            Menu.Add(new Button(1, 3, "Add visit", () =>
+            {
+                AddVisit();
+            }));
+
+            Menu.Add(new Button(1, 4, "Back", () =>
+            {
+                Menu.PrevMenu();
+            }));
+        }
+
+        public List<T> FindItem<T>(List<T> list, T item)
+        {
+            if (list.Count == 0)
+                return list;
+
+            List<T> found = new List<T>();
+
+            foreach (T element in list)
+            {
+                if (element.Equals(item))
+                    found.Add(element);
+            }
+
+            return found;
+        }
+        public void ShowList<T>(List<T> list, Action<T> a)
+        {
+            Menu.Clear();
+
+            Menu.Add(new Button(1, 0, "Back", () =>
+            {
+                Menu.PrevMenu();
+            }));
+
+            for (int i = 0; i < list.Count(); i++)
+            {
+                int num = new int();
+                num = i;
+
+                Menu.Add(new Button(1, i + 1, list[i].ToString(), () =>
+                {
+                    int number = num;
+                    a(list[num]);
+                }));
+            }
+        }
+
+
+        public void AddVisit()
+        {
+            Menu.Clear();
+            Menu.AddPrevMenu(AddVisit);
+
+            Edit date = new Edit(1, 0, "Date: ");
+            Menu.Add(date);
+            Edit details = new Edit(1, 1, "Details: ");
+            Menu.Add(details);
+
+
+            Menu.Add(new Button(1, 4, "Ok", () =>
+            {
+                cabinet.AddVisit(date.GetData(), details.GetData());
+                PatientMenu();
+            }));
+            Menu.Add(new Button(1, 5, "Back", () =>
+            {
+                Menu.PrevMenu();
+            }));
+        }
+
+        public void FindPatient()
+        {
+            Menu.AddPrevMenu(FindPatient);
+            Menu.Clear();
+
+            Edit name = new Edit(1, 0, "Name");
+            Menu.Add(name);
+            Edit surname = new Edit(1, 1, "Surname");
+            Menu.Add(surname);
+            Edit phone = new Edit(1, 2, "Phone: ");
+            Menu.Add(phone);
+            Edit details = new Edit(1, 3, "Details: ");
+            Menu.Add(details);
+
+            Menu.Add(new Button(1, 4, "Ok", () =>
+            {
+                Patient patient = new Patient(name.GetData(), surname.GetData(), phone.GetData(), details.GetData());
+                List<Patient> found = FindItem(cabinet.GetPatients(), patient);
+                if (found.Count > 0)
+                {
+                    ShowList(found, (Patient p) => { cabinet.CurrentPatient = p; PatientMenu(); });
+                }
+                else
+                {
+                    Console.SetCursorPosition(10, 4);
+                    Console.WriteLine("Not found");
+                }
+            }));
+
+            Menu.Add(new Button(1, 5, "Back", () =>
+            {
+                Menu.PrevMenu();
+            }));
+        }
+        public void FindVisit()
+        {
+            Menu.AddPrevMenu(FindVisit);
+            Menu.Clear();
+
+            Edit date = new Edit(1, 0, "Date");
+            Menu.Add(date);
+            Edit details = new Edit(1, 1, "Details");
+            Menu.Add(details);
+
+
+            Menu.Add(new Button(1, 4, "Ok", () =>
+            {
+                Visit visit = new Visit(date.GetData(), details.GetData(), cabinet.CurrentPatient);
+                List<Visit> found = FindItem(cabinet.GetVisits(), visit);
+                if (found.Count > 0)
+                {
+                    ShowList(found, (Visit v) => { cabinet.CurrentVisit = v; VisitMenu(); });
+                }
+                else
+                {
+                    Console.SetCursorPosition(10, 4);
+                    Console.WriteLine("Not found");
+                }
+            }));
+
+            Menu.Add(new Button(1, 5, "Back", () =>
+            {
+                Menu.PrevMenu();
+            }));
+        }
+
+        //public void PatientMenu()
+        //{
+        //    Menu.Clear();
+
+        //    Menu.Add(new Button(1, 0, "Details", () =>
         //    {
-        //        if (list.Count == 0)
-        //            return list;
+        //        ShowPatientDetails();
+        //    }));
 
-        //        List<T> found = new List<T>();
-
-        //        foreach (T element in list)
-        //        {
-        //            if (element.Equals(item))
-        //                found.Add(element);       
-        //        }
-
-        //        return found;
-        //    }
-        //    public void ShowList<T>(List<T>list,Action<T> a)
+        //    Menu.Add(new Button(1, 1, "Visit history", () =>
         //    {
-        //        index = 0;
-        //        ctrls.Clear();
-        //        Console.Clear();
+        //        ShowList(cabinet.CurrentPatient.GetPastVisits(), (Visit v) => { cabinet.CurrentVisit = v; VisitMenu(); });
+        //    }));
 
-        //        ctrls.Add(new Button(1, 0, "Back", () =>
-        //        {
-        //            Action buf = prevMenu.ElementAt(prevMenu.Count - 1);
-        //            prevMenu.RemoveAt(prevMenu.Count - 1);
-        //            buf();
-        //        }));
-
-        //        for(int i=0;i<list.Count();i++)
-        //        {
-        //            int num = new int();
-        //            num = i;
-
-        //            ctrls.Add(new Button(1, i+1, list[i].ToString(), () => {
-        //                int number = num;
-        //                a(list[num]);
-        //            }));
-        //        }
-        //    }
-
-
-        //    public void AddVisit()
+        //    Menu.Add(new Button(1, 2, "Future visits", () =>
         //    {
-        //        index = 0;
-        //        ctrls.Clear();
-        //        Console.Clear();
+        //        ShowList(cabinet.CurrentPatient.GetFutureVisits(), (Visit v) => { cabinet.CurrentVisit = v; VisitMenu(); });
+        //    }));
 
-        //        Edit date = new Edit(1, 0, "Date: ");
-        //        ctrls.Add(date);
-        //        Edit details = new Edit(1, 1, "Details: ");
-        //        ctrls.Add(details);
-
-
-        //        ctrls.Add(new Button(1, 4, "Ok", () =>
-        //        {
-        //            cabinet.AddVisit(date.GetData(), details.GetData());
-        //            PatientMenu();
-        //        }));
-        //        ctrls.Add(new Button(1, 5, "Back", () =>
-        //        {
-        //            Action buf = prevMenu.ElementAt(prevMenu.Count - 1);
-        //            prevMenu.RemoveAt(prevMenu.Count - 1);
-        //            buf();
-        //        }));
-        //    }
-
-        //    public void FindPatient()
+        //    Menu.Add(new Button(1, 3, "Add visit", () =>
         //    {
-        //        index = 0;
-        //        ctrls.Clear();
-        //        Console.Clear();
+        //        AddVisit();
+        //    }));
 
-        //        Edit name = new Edit(1, 0, "Name");
-        //        ctrls.Add(name);
-        //        Edit surname = new Edit(1, 1, "Surname");
-        //        ctrls.Add(surname);
-        //        Edit phone = new Edit(1, 2, "Phone: ");
-        //        ctrls.Add(phone);
-        //        Edit details = new Edit(1, 3, "Details: ");
-        //        ctrls.Add(details);
-
-        //        ctrls.Add(new Button(1, 4, "Ok", () =>
-        //        {
-        //            prevMenu.Add(FindPatient);
-        //        Patient patient = new Patient(name.GetData(), surname.GetData(), phone.GetData(), details.GetData());
-        //        List<Patient> found = FindItem(cabinet.GetPatients(), patient);
-        //            if (found.Count>0)
-        //            {
-        //                ShowList(found, (Patient p) => { cabinet.CurrentPatient = p; PatientMenu();});
-        //            }
-        //            else
-        //            {
-        //                Console.SetCursorPosition(10, 4);
-        //                Console.WriteLine("Not found");
-        //                index = 0;
-        //            }
-        //        }));
-
-        //        ctrls.Add(new Button(1, 5, "Back", () =>
-        //        {
-        //            Action buf = prevMenu.ElementAt(prevMenu.Count - 1);
-        //            prevMenu.RemoveAt(prevMenu.Count - 1);
-        //            buf();
-        //        }));
-        //    }
-        //    public void FindVisit()
+        //    Menu.Add(new Button(1, 4, "Back", () =>
         //    {
-        //        index = 0;
-        //        ctrls.Clear();
-        //        Console.Clear();
-
-        //        Edit date = new Edit(1, 0, "Date");
-        //        ctrls.Add(date);
-        //        Edit details = new Edit(1, 1, "Details");
-        //        ctrls.Add(details);
+        //        Menu.PrevMenu();
+        //    }));
+        //}
 
 
-        //        ctrls.Add(new Button(1, 4, "Ok", () =>
-        //        {
-        //            prevMenu.Add(FindVisit);
-        //            Visit visit = new Visit(date.GetData(), details.GetData(),cabinet.CurrentPatient);
-        //            List<Visit> found = FindItem(cabinet.GetVisits(), visit);
-        //            if (found.Count > 0)
-        //            {
-        //                ShowList(found, (Visit v) => { cabinet.CurrentVisit = v; VisitMenu(); });
-        //            }
-        //            else
-        //            {
-        //                Console.SetCursorPosition(10, 4);
-        //                Console.WriteLine("Not found");
-        //                index = 0;
-        //            }
-        //        }));
+        public void ShowPatientDetails()
+        {
+            Menu.Clear();
 
-        //        ctrls.Add(new Button(1, 5, "Back", () =>
-        //        {
-        //            Action buf = prevMenu.ElementAt(prevMenu.Count - 1);
-        //            prevMenu.RemoveAt(prevMenu.Count - 1);
-        //            buf();
-        //        }));
-        //    }
+            Edit name = new Edit(1, 0, "Name", cabinet.CurrentPatient.Name);
+            Menu.Add(name);
+            Edit surname = new Edit(1, 1, "Surname", cabinet.CurrentPatient.Surname);
+            Menu.Add(surname);
+            Edit phone = new Edit(1, 2, "Phone: ", cabinet.CurrentPatient.Phone);
+            Menu.Add(phone);
+            Edit details = new Edit(1, 3, "Details: ", cabinet.CurrentPatient.Details);
+            Menu.Add(details);
 
-        //    public void PatientMenu()
-        //    {
-        //        index = 0;
-        //        ctrls.Clear();
-        //        Console.Clear();
+            Menu.Add(new Button(1, 4, "Ok", () =>
+            {
+                cabinet.CurrentPatient.Name = name.GetData();
+                cabinet.CurrentPatient.Surname = surname.GetData();
+                cabinet.CurrentPatient.Phone = phone.GetData();
+                cabinet.CurrentPatient.Details = details.GetData();
+            }));
+            Menu.Add(new Button(1, 5, "Back", () =>
+            {
+                Menu.PrevMenu();
+            }));
+        }
 
+        public void VisitMenu()
+        {
+            Menu.Clear();
 
-        //        ctrls.Add(new Button(1, 0, "Details", () =>
-        //        {
-        //            ShowPatientDetails();
-        //        }));
+            Edit date = new Edit(1, 0, "Date", cabinet.CurrentVisit.Date);
+            Menu.Add(date);
+            Edit details = new Edit(1, 1, "Details", cabinet.CurrentVisit.Details);
+            Menu.Add(details);
+            Menu.Add(new Button(1, 2, "Patient: " + cabinet.CurrentVisit.Patient.Name + " " + cabinet.CurrentVisit.Patient.Surname, PatientMenu));
 
-        //        ctrls.Add(new Button(1, 1, "Visit history", () =>
-        //        {
-        //            ShowList(cabinet.CurrentPatient.GetPastVisits(), (Visit v) => { cabinet.CurrentVisit = v; VisitMenu(); });
-        //        }));
-
-        //        ctrls.Add(new Button(1, 2, "Future visits", () =>
-        //        {
-        //            ShowList(cabinet.CurrentPatient.GetFutureVisits(),(Visit v)=> { cabinet.CurrentVisit = v; VisitMenu(); });
-        //        }));
-
-        //        ctrls.Add(new Button(1, 3, "Add visit", () =>
-        //        {
-        //            AddVisit();
-        //        }));
-
-        //        ctrls.Add(new Button(1, 4, "Back", () =>
-        //        {
-        //            Action buf = prevMenu.ElementAt(prevMenu.Count - 1);
-        //            prevMenu.RemoveAt(prevMenu.Count - 1);
-        //            buf();
-        //        }));
-        //    }
-        //    public void ShowPatientDetails()
-        //    {
-        //        index = 0;
-        //        ctrls.Clear();
-        //        Console.Clear();
-
-        //        Edit name = new Edit(1, 0, "Name",cabinet.CurrentPatient.Name);
-        //        ctrls.Add(name);
-        //        Edit surname = new Edit(1, 1, "Surname", cabinet.CurrentPatient.Surname);
-        //        ctrls.Add(surname);
-        //        Edit phone = new Edit(1, 2, "Phone: ", cabinet.CurrentPatient.Phone);
-        //        ctrls.Add(phone);
-        //        Edit details = new Edit(1, 3, "Details: ", cabinet.CurrentPatient.Details);
-        //        ctrls.Add(details);
-
-        //        ctrls.Add(new Button(1, 4, "Ok", () =>
-        //        {
-        //            cabinet.CurrentPatient.Name = name.GetData();
-        //            cabinet.CurrentPatient.Surname = surname.GetData();
-        //            cabinet.CurrentPatient.Phone = phone.GetData();
-        //            cabinet.CurrentPatient.Details = details.GetData();
-
-        //            Action buf = prevMenu.ElementAt(prevMenu.Count - 1);
-        //            prevMenu.RemoveAt(prevMenu.Count - 1);
-        //            buf();
-        //        }));
-        //    }
-        //    public void VisitMenu()
-        //    {
-        //        index = 0;
-        //        ctrls.Clear();
-        //        Console.Clear();
-
-        //        Edit date = new Edit(1, 0, "Date", cabinet.CurrentVisit.Date);
-        //        ctrls.Add(date);
-        //        Edit details = new Edit(1, 1, "Details", cabinet.CurrentVisit.Details);
-        //        ctrls.Add(details);
-        //        ctrls.Add(new Button(1,2,"Patient: "+cabinet.CurrentVisit.Patient.Name+" "+ cabinet.CurrentVisit.Patient.Surname,PatientMenu));
-
-        //        ctrls.Add(new Button(1, 4, "Back", () =>
-        //        {
-        //            cabinet.CurrentVisit.Date = date.GetData();
-        //            cabinet.CurrentVisit.Details = details.GetData();
-        //            Action buf = prevMenu.ElementAt(prevMenu.Count - 1);
-        //            prevMenu.RemoveAt(prevMenu.Count - 1);
-        //            buf();
-        //        }));
-        //    }
+            Menu.Add(new Button(1, 4, "Back", () =>
+            {
+                cabinet.CurrentVisit.Date = date.GetData();
+                cabinet.CurrentVisit.Details = details.GetData();
+            }));
+            Menu.Add(new Button(1, 5, "Back", () => 
+            {
+                Menu.PrevMenu();
+            }));
+        }
 
 
-        //    public void VisitHistory()
-        //    {
-        //        ShowList(cabinet.GetVisitsHistory(), (Visit p) => { cabinet.CurrentVisit = p; VisitMenu(); });
-        //    }
-        //    public void NextVisits()
-        //    {
-        //        ShowList(cabinet.GetFutureVisits(), (Visit p) => { cabinet.CurrentVisit = p; VisitMenu(); });
-        //    }
-        //    public void AllPatients()
-        //    {
-        //        ShowList(cabinet.GetPatients(), (Patient p) => { cabinet.CurrentPatient = p; PatientMenu(); });
-        //    }
+        public void VisitHistory()
+        {
+            ShowList(cabinet.GetVisitsHistory(), (Visit p) => { cabinet.CurrentVisit = p; VisitMenu(); });
+        }
+        public void NextVisits()
+        {
+            ShowList(cabinet.GetFutureVisits(), (Visit p) => { cabinet.CurrentVisit = p; VisitMenu(); });
+        }
+        public void AllPatients()
+        {
+            ShowList(cabinet.GetPatients(), (Patient p) => { cabinet.CurrentPatient = p; PatientMenu(); });
+        }
 
 
         public void Exit()
@@ -340,19 +321,13 @@ namespace StringAndStringBuilder
         //    }
 
 
-        //    public App()
-        //    {
-        //        endProgram = false;
-        //        prevMenu = new List<Action>();
-        //        ctrls = new List<Ctrl>();
-        //        cabinet = new Cabinet();
-        //        cursor = new Cursor();
-        //        action = null;
-        //        index = 0;
-        //    }
-        //}
+        public App()
+        {
+            endProgram = false;
+        }
     }
 }
+
 
 
 
