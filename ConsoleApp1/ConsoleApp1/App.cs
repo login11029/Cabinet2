@@ -13,17 +13,17 @@ namespace StringAndStringBuilder
 
         public void Program()
         {
+            Action a = null;
 
+            Menu.NextMenu(MainM);
 
-            
-
-
-
-
-            MainM();
             while (endProgram != true)
             {
-                Menu.Action()();
+                a=Menu.Action();
+                if (a != null)
+                {
+                    a();
+                }
             }
         }
 
@@ -31,21 +31,17 @@ namespace StringAndStringBuilder
 
         void MainM()
         {
-            Menu.Clear();
-            Menu.AddPrevMenu(MainM);
-            Menu.Add(new Button(1, 0, "Add Patient", () => { AddPatient(); }));
-            Menu.Add(new Button(1, 1, "Find Patient", () => { }));
-            Menu.Add(new Button(1, 2, "Find Visit", () => { }));
-            Menu.Add(new Button(1, 3, "Visit history", () => { }));
-            Menu.Add(new Button(1, 4, "Next Visits", () => { }));
-            Menu.Add(new Button(1, 5, "Patients", () => { }));
+            Menu.Add(new Button(1, 0, "Add Patient", () => { Menu.NextMenu(AddPatient); }));
+            Menu.Add(new Button(1, 1, "Find Patient", () => { Menu.NextMenu(FindPatient); }));
+            Menu.Add(new Button(1, 2, "Find Visit", () => { Menu.NextMenu(FindVisit); }));
+            Menu.Add(new Button(1, 3, "Visit history", () => { Menu.NextMenu(VisitHistory); }));
+            Menu.Add(new Button(1, 4, "Next Visits", () => { Menu.NextMenu(NextVisits); }));
+            Menu.Add(new Button(1, 5, "Patients", () => { Menu.NextMenu(AllPatients); }));
             Menu.Add(new Button(1, 7, "Exit", () => { Exit(); }));
         }
 
         void AddPatient()
         {
-            Menu.Clear();
-            Menu.AddPrevMenu(AddPatient);
             Edit name = new Edit(1, 0, "Name"); Menu.Add(name);
             Edit surname = new Edit(1, 1, "Surname"); Menu.Add(surname);
             Edit phone = new Edit(1, 2, "Phone: "); Menu.Add(phone);
@@ -53,6 +49,7 @@ namespace StringAndStringBuilder
             Menu.Add(new Button(1, 4, "Ok", () =>
             {
                 cabinet.AddPatient(name.GetData(), surname.GetData(), phone.GetData(), details.GetData());
+                Menu.NextMenu(PatientMenu);
             }));
             Menu.Add(new Button(1, 5, "Back", () =>
             {
@@ -63,35 +60,29 @@ namespace StringAndStringBuilder
 
         void PatientMenu()
         {
-            Menu.Clear();
-
             Menu.Add(new Button(1, 0, "Details", () =>
             {
-                ShowPatientDetails();
+                Menu.NextMenu(ShowPatientDetails);
             }));
-
             Menu.Add(new Button(1, 1, "Visit history", () =>
             {
                 ShowList(cabinet.CurrentPatient.GetPastVisits(), (Visit v) => { cabinet.CurrentVisit = v; VisitMenu(); });
             }));
-
             Menu.Add(new Button(1, 2, "Future visits", () =>
             {
                 ShowList(cabinet.CurrentPatient.GetFutureVisits(), (Visit v) => { cabinet.CurrentVisit = v; VisitMenu(); });
             }));
-
             Menu.Add(new Button(1, 3, "Add visit", () =>
             {
-                AddVisit();
+                Menu.NextMenu(AddVisit);
             }));
-
             Menu.Add(new Button(1, 4, "Back", () =>
             {
                 Menu.PrevMenu();
             }));
         }
 
-        public List<T> FindItem<T>(List<T> list, T item)
+        List<T> FindItem<T>(List<T> list, T item)
         {
             if (list.Count == 0)
                 return list;
@@ -106,7 +97,7 @@ namespace StringAndStringBuilder
 
             return found;
         }
-        public void ShowList<T>(List<T> list, Action<T> a)
+        void ShowList<T>(List<T> list, Action<T> a)
         {
             Menu.Clear();
 
@@ -129,21 +120,16 @@ namespace StringAndStringBuilder
         }
 
 
-        public void AddVisit()
+        void AddVisit()
         {
-            Menu.Clear();
-            Menu.AddPrevMenu(AddVisit);
-
             Edit date = new Edit(1, 0, "Date: ");
             Menu.Add(date);
             Edit details = new Edit(1, 1, "Details: ");
             Menu.Add(details);
-
-
             Menu.Add(new Button(1, 4, "Ok", () =>
             {
                 cabinet.AddVisit(date.GetData(), details.GetData());
-                PatientMenu();
+                Menu.PrevMenu();
             }));
             Menu.Add(new Button(1, 5, "Back", () =>
             {
@@ -151,11 +137,8 @@ namespace StringAndStringBuilder
             }));
         }
 
-        public void FindPatient()
+        void FindPatient()
         {
-            Menu.AddPrevMenu(FindPatient);
-            Menu.Clear();
-
             Edit name = new Edit(1, 0, "Name");
             Menu.Add(name);
             Edit surname = new Edit(1, 1, "Surname");
@@ -164,7 +147,6 @@ namespace StringAndStringBuilder
             Menu.Add(phone);
             Edit details = new Edit(1, 3, "Details: ");
             Menu.Add(details);
-
             Menu.Add(new Button(1, 4, "Ok", () =>
             {
                 Patient patient = new Patient(name.GetData(), surname.GetData(), phone.GetData(), details.GetData());
@@ -179,23 +161,17 @@ namespace StringAndStringBuilder
                     Console.WriteLine("Not found");
                 }
             }));
-
             Menu.Add(new Button(1, 5, "Back", () =>
             {
                 Menu.PrevMenu();
             }));
         }
-        public void FindVisit()
+        void FindVisit()
         {
-            Menu.AddPrevMenu(FindVisit);
-            Menu.Clear();
-
             Edit date = new Edit(1, 0, "Date");
             Menu.Add(date);
             Edit details = new Edit(1, 1, "Details");
             Menu.Add(details);
-
-
             Menu.Add(new Button(1, 4, "Ok", () =>
             {
                 Visit visit = new Visit(date.GetData(), details.GetData(), cabinet.CurrentPatient);
@@ -210,47 +186,14 @@ namespace StringAndStringBuilder
                     Console.WriteLine("Not found");
                 }
             }));
-
             Menu.Add(new Button(1, 5, "Back", () =>
             {
                 Menu.PrevMenu();
             }));
         }
 
-        //public void PatientMenu()
-        //{
-        //    Menu.Clear();
-
-        //    Menu.Add(new Button(1, 0, "Details", () =>
-        //    {
-        //        ShowPatientDetails();
-        //    }));
-
-        //    Menu.Add(new Button(1, 1, "Visit history", () =>
-        //    {
-        //        ShowList(cabinet.CurrentPatient.GetPastVisits(), (Visit v) => { cabinet.CurrentVisit = v; VisitMenu(); });
-        //    }));
-
-        //    Menu.Add(new Button(1, 2, "Future visits", () =>
-        //    {
-        //        ShowList(cabinet.CurrentPatient.GetFutureVisits(), (Visit v) => { cabinet.CurrentVisit = v; VisitMenu(); });
-        //    }));
-
-        //    Menu.Add(new Button(1, 3, "Add visit", () =>
-        //    {
-        //        AddVisit();
-        //    }));
-
-        //    Menu.Add(new Button(1, 4, "Back", () =>
-        //    {
-        //        Menu.PrevMenu();
-        //    }));
-        //}
-
-
-        public void ShowPatientDetails()
+        void ShowPatientDetails()
         {
-            Menu.Clear();
 
             Edit name = new Edit(1, 0, "Name", cabinet.CurrentPatient.Name);
             Menu.Add(name);
@@ -260,7 +203,6 @@ namespace StringAndStringBuilder
             Menu.Add(phone);
             Edit details = new Edit(1, 3, "Details: ", cabinet.CurrentPatient.Details);
             Menu.Add(details);
-
             Menu.Add(new Button(1, 4, "Ok", () =>
             {
                 cabinet.CurrentPatient.Name = name.GetData();
@@ -274,17 +216,15 @@ namespace StringAndStringBuilder
             }));
         }
 
-        public void VisitMenu()
-        {
-            Menu.Clear();
+        void VisitMenu()
+        { 
 
             Edit date = new Edit(1, 0, "Date", cabinet.CurrentVisit.Date);
             Menu.Add(date);
             Edit details = new Edit(1, 1, "Details", cabinet.CurrentVisit.Details);
             Menu.Add(details);
             Menu.Add(new Button(1, 2, "Patient: " + cabinet.CurrentVisit.Patient.Name + " " + cabinet.CurrentVisit.Patient.Surname, PatientMenu));
-
-            Menu.Add(new Button(1, 4, "Back", () =>
+            Menu.Add(new Button(1, 4, "Ok", () =>
             {
                 cabinet.CurrentVisit.Date = date.GetData();
                 cabinet.CurrentVisit.Details = details.GetData();
@@ -296,29 +236,25 @@ namespace StringAndStringBuilder
         }
 
 
-        public void VisitHistory()
+        void VisitHistory()
         {
             ShowList(cabinet.GetVisitsHistory(), (Visit p) => { cabinet.CurrentVisit = p; VisitMenu(); });
         }
-        public void NextVisits()
+        void NextVisits()
         {
             ShowList(cabinet.GetFutureVisits(), (Visit p) => { cabinet.CurrentVisit = p; VisitMenu(); });
         }
-        public void AllPatients()
+        void AllPatients()
         {
             ShowList(cabinet.GetPatients(), (Patient p) => { cabinet.CurrentPatient = p; PatientMenu(); });
         }
 
 
-        public void Exit()
+        void Exit()
         {
             endProgram = true;
         }
-        //    public void DeleteCtrl(Ctrl c)
-        //    {
-        //        c.Erase();
-        //        ctrls.Remove(c);
-        //    }
+
 
 
         public App()

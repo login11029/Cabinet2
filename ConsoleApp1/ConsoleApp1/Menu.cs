@@ -11,12 +11,12 @@ namespace StringAndStringBuilder
         static List<Ctrl> controls=new List<Ctrl>();
         static List<Action> prevMenu=new List<Action>();
         static Cursor cursor=new Cursor();
+        static int index = 0;
 
         static public Action Action()
         {
             char c;
             Action action;
-            int index = 0;
 
             while (true)
             {
@@ -42,6 +42,7 @@ namespace StringAndStringBuilder
         static public void PrevMenu()
         {
             prevMenu.RemoveAt(prevMenu.Count() - 1);
+            Clear();
             prevMenu.ElementAt(prevMenu.Count() - 1)();
         }
         static public void Add(Ctrl control)
@@ -52,22 +53,18 @@ namespace StringAndStringBuilder
         {
             prevMenu.Add(prev);
         }
-        static public void ShowMenu()
+        static public void NextMenu(Action menu)
         {
             Clear();
-            foreach(Ctrl item in controls)
-            {
-                controls.Add(item);
-            }
-            foreach (Ctrl item in controls)
-            {
-                item.Print();
-            }
+            AddPrevMenu(menu);
+
+            menu();
         }
         static public void Clear()
         {
             controls.Clear();
             Console.Clear();
+            index = 0;
         }
     }
 }
