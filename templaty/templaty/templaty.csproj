@@ -4,10 +4,10 @@
   <PropertyGroup>
     <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
-    <ProjectGuid>{F0A1A432-5F3E-405A-9B50-26CE27EF9486}</ProjectGuid>
+    <ProjectGuid>{8A1B7E59-DCB0-4F8E-9447-B6DD5B57EC11}</ProjectGuid>
     <OutputType>Exe</OutputType>
-    <RootNamespace>ConsoleApp1</RootNamespace>
-    <AssemblyName>ConsoleApp1</AssemblyName>
+    <RootNamespace>templaty</RootNamespace>
+    <AssemblyName>templaty</AssemblyName>
     <TargetFrameworkVersion>v4.6.1</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
@@ -43,37 +43,11 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Menus\AllPatientsM.cs" />
-    <Compile Include="Menus\FindVisitM.cs" />
-    <Compile Include="Menus\FindPatientM.cs" />
-    <Compile Include="Menus\AddVisitM.cs" />
-    <Compile Include="Menus\AddPatientM.cs" />
-    <Compile Include="Menus\NextVisitsM.cs" />
-    <Compile Include="Main\App.cs" />
-    <Compile Include="Controls\Button.cs" />
-    <Compile Include="Cabinet\Cabinet.cs" />
-    <Compile Include="Controls\Cords.cs" />
-    <Compile Include="Controls\Ctrl.cs" />
-    <Compile Include="Controls\Cursor.cs" />
-    <Compile Include="Controls\Edit.cs" />
-    <Compile Include="Controls\CtrlList.cs" />
-    <Compile Include="Menus\MainM.cs" />
-    <Compile Include="Controls\Menu.cs" />
-    <Compile Include="Cabinet\Patient.cs" />
-    <Compile Include="Menus\PatientM.cs" />
-    <Compile Include="Main\Program.cs" />
-    <Compile Include="Menus\PatientDetailsM.cs" />
-    <Compile Include="Menus\PastVisitsM.cs" />
+    <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
-    <Compile Include="Cabinet\Visit.cs" />
-    <Compile Include="Menus\VisitM.cs" />
   </ItemGroup>
   <ItemGroup>
-    <None Include="Main\App.config" />
-  </ItemGroup>
-  <ItemGroup>
-    <Content Include="Main\ConsoleApp2.csproj" />
-    <Content Include="Main\ConsoleApp2.csproj.user" />
+    <None Include="App.config" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
 </Project>

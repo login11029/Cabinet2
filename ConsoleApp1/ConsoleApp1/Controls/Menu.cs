@@ -12,7 +12,7 @@ namespace StringAndStringBuilder
         static List<Action> prevMenu=new List<Action>();
         static Cursor cursor=new Cursor();
         static int index = 0;
-
+        static Action _currentMenu;
         static public Action Action()
         {
             char c;
@@ -49,17 +49,46 @@ namespace StringAndStringBuilder
         {
             controls.Add(control);
         }
-        static public void AddPrevMenu(Action prev)
+        static public void Refresh()
         {
-            prevMenu.Add(prev);
+            Clear();
+            _currentMenu();
         }
         static public void NextMenu(Action menu)
         {
             Clear();
-            AddPrevMenu(menu);
-
+            prevMenu.Add(menu);
+            _currentMenu = menu;
             menu();
         }
+
+        static public void ShowList<T>(List<T> list, Action<T> action)
+        {
+            Action menu = () =>
+            {
+                Add(new Button(1, 0, "Back", () =>
+                {
+                    PrevMenu();
+                }));
+
+                for (int i = 0; i < list.Count(); i++)
+                {
+                    int num = new int();
+                    num = i;
+
+                    Add(new Button(1, i + 1, list[i].ToString(), () =>
+                    {
+                        int number = num;
+                        action(list[num]);
+                    }));
+
+                }
+            };
+
+            _currentMenu = menu;
+            NextMenu(menu);
+        }
+
         static public void Clear()
         {
             controls.Clear();

@@ -14,6 +14,10 @@ namespace StringAndStringBuilder
 
         public Action Tap()
         {
+            if (_data != null)
+            {
+                EraseData();
+            }
             Console.SetCursorPosition(_cords.X+10, _cords.Y);
             _data = Console.ReadLine();
             return null;
@@ -51,12 +55,16 @@ namespace StringAndStringBuilder
             Console.SetCursorPosition(_cords.X, _cords.Y);
             Console.WriteLine(buf);
 
-            buf = null;
+            EraseData();
+        }
+        void EraseData()
+        {
+            string buf = null;
             for (int i = 0; i < _data.Length; i++)
             {
                 buf += ' ';
             }
-            Console.SetCursorPosition(_cords.X+10, _cords.Y);
+            Console.SetCursorPosition(_cords.X + 10, _cords.Y);
             Console.WriteLine(buf);
         }
         public void SetAction(Action a)

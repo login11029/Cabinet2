@@ -10,7 +10,6 @@ namespace StringAndStringBuilder
     class Button:Ctrl
     {
         Action _action = null;
-        Action _actionBuf = null;
         string _text;
         Cords _cords;
 
@@ -43,7 +42,6 @@ namespace StringAndStringBuilder
         public void SetAction(Action a)
         {
             _action = a;
-            _actionBuf = a;
         }
         public void Print()
         {
@@ -56,7 +54,6 @@ namespace StringAndStringBuilder
             _cords.X = x;
             _cords.Y = y;
             _action = action;
-            _actionBuf = _action;
             _text = text;
 
             Console.SetCursorPosition(_cords.X, _cords.Y);
